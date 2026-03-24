@@ -42,3 +42,4 @@ node_modules/
 package-lock.json 
 .DS_Store 
 mapaseguro-889ab-firebase-adminsdk-fbsvc-84aa3e3829.json 
+firebaseKey.json 
