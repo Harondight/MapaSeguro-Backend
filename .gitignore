@@ -43,3 +43,25 @@ package-lock.json
 .DS_Store 
 mapaseguro-889ab-firebase-adminsdk-fbsvc-84aa3e3829.json 
 firebaseKey.json 
+"# Dependencias" 
+"node_modules/" 
+"package-lock.json" 
+"" 
+"# Variables de entorno" 
+".env" 
+".env.local" 
+".env.production" 
+"" 
+"# Credenciales - NUNCA SUBIR" 
+"firebaseKey.json" 
+"*.key" 
+"*.pem" 
+"" 
+"# Archivos del sistema" 
+".DS_Store" 
+"Thumbs.db" 
+"" 
+"# Logs" 
+"logs/" 
+"*.log" 
+firebaseKey.json 

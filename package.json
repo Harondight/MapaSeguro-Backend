@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "cors": "^2.8.6",
     "crypto": "^1.0.1",
@@ -17,5 +17,14 @@
     "firebase": "^12.11.0",
     "firebase-admin": "^13.7.0",
     "mysql2": "^3.20.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Harondight/MapaSeguro.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Harondight/MapaSeguro/issues"
+  },
+  "homepage": "https://github.com/Harondight/MapaSeguro#readme",
+  "description": ""
 }
