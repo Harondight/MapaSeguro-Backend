@@ -4,44 +4,54 @@ const mysql = require('mysql2/promise');
 const admin = require('firebase-admin');
 require('dotenv').config();
 
-// 1. Iniciar Firebase Admin
-const serviceAccount = require('./firebaseKey.json');
-admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
-
-// 2. Conectar a MariaDB (Aiven)
-const pool = mysql.createPool({ uri: process.env.DB_URL });
-
 const app = express();
+const PORT = process.env.PORT || 3000;
+
 app.use(cors());
 app.use(express.json());
 
-// 3. Middleware: El cadenero que revisa el Token de Firebase
-const verificarUsuario = async (req, res, next) => {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) return res.status(401).json({ error: "No autorizado" });
-    try {
-        const decodedToken = await admin.auth().verifyIdToken(token);
-        req.user = decodedToken; // Guardamos los datos del usuario validado
-        next(); // Pasa a la base de datos
-    } catch (error) {
-        res.status(401).json({ error: "Token inválido" });
-    }
-};
+// CONFIGURACIÓN SEGURA DE FIREBASE
+let serviceAccount;
 
-// 4. Ruta Protegida: Guardar un reporte
-app.post('/api/reportes', verificarUsuario, async (req, res) => {
+// PRIMERO: Intentar usar variable de entorno (Render)
+if (process.env.FIREBASE_SERVICE_ACCOUNT) {
     try {
-        // req.user.uid viene directo de Firebase, es 100% seguro y no se puede falsificar
-        const uid = req.body.es_anonimo ? req.user.uid : req.user.uid; 
-        
-        const [resultado] = await pool.execute(
-            `INSERT INTO reportes (uid_usuario, tipo, nivel_riesgo, latitud, longitud) VALUES (?, ?, ?, ?, ?)`,
-            [uid, req.body.tipo, req.body.nivel_riesgo, req.body.latitud, req.body.longitud]
-        );
-        res.json({ mensaje: "Reporte guardado", id: resultado.insertId });
+        serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+        console.log('✅ Firebase: Usando credenciales desde variable de entorno');
     } catch (error) {
-        res.status(500).json({ error: "Error en base de datos" });
+        console.error('❌ Error al parsear FIREBASE_SERVICE_ACCOUNT');
+        process.exit(1);
     }
+} 
+// SEGUNDO: Intentar usar archivo local (solo desarrollo)
+else {
+    try {
+        serviceAccount = require('./firebaseKey.json');
+        console.log('⚠️ Firebase: Usando archivo local (solo desarrollo)');
+    } catch (error) {
+        console.error('❌ ERROR: Credenciales de Firebase no encontradas');
+        console.error('   En producción: Configurar variable FIREBASE_SERVICE_ACCOUNT');
+        console.error('   En desarrollo: Colocar firebaseKey.json en la raíz');
+        process.exit(1);
+    }
+}
+
+// Inicializar Firebase Admin
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
 });
 
-app.listen(3000, () => console.log('Backend vivo en puerto 3000'));
+// Ruta de prueba
+app.get('/api/health', (req, res) => {
+    res.json({ 
+        status: 'OK', 
+        message: 'Servidor MapaSeguro funcionando',
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Resto de tu código...
+
+app.listen(PORT, () => {
+    console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
+});
