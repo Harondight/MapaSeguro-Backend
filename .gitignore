@@ -1,0 +1,44 @@
+# Archivos de entorno (variables sensibles)
+.env
+.env.local
+.env.production
+
+# Dependencias
+node_modules/
+package-lock.json
+yarn.lock
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Configuración de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos de despliegue
+dist/
+build/
+
+# Archivos de base de datos locales
+*.sqlite
+*.db".env" 
+"node_modules/" 
+"package-lock.json" 
+".DS_Store" 
+.env 
+node_modules/ 
+package-lock.json 
+.DS_Store 
+.env 
+node_modules/ 
+package-lock.json 
+.DS_Store 
+mapaseguro-889ab-firebase-adminsdk-fbsvc-84aa3e3829.json 
